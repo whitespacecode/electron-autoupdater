@@ -1,4 +1,4 @@
-# electron-github-autoupdater
+# electron-autoupdater
 
 **Using this package with React?** Check out this project's companion package, [react-electron-autoupdater](https://github.com/christianblandford/react-electron-autoupdater), which provides a custom hook for easily handling updates in the renderer process!
 
@@ -12,14 +12,25 @@ All you need to do is provide your Github base url, your organization or owner n
 
 ## Installation and Usage
 
-`yarn add electron-github-autoupdater`
+#### if using npm
+`npm install @whitespacecode/electron-autoupdater`
+
+#### or if using yarn
+`yarn add @whitespacecode/electron-autoupdater`
+
 
 Import the library in your main process
+```
+import { autoUpdater, AutoUpdaterOptions } from '@whitespacecode/electron-autoupdater'
 
-    import { autoUpdater } from 'electron-github-autoupdater'
+const config: AutoUpdaterOptions = {
+    owner: owner,
+    repo: repo,
+    accessToken: token,
+};
 
-    autoUpdater({config})
-
+const updater = autoUpdater(config);
+```
 That's pretty much it! It looks just like Electron's autoUpdater, but accepts a config object.
 
 ## Config
@@ -42,12 +53,14 @@ That's pretty much it! It looks just like Electron's autoUpdater, but accepts a 
 
 ### Config Example
 
-    const updater = autoUpdater({
-        baseUrl: 'https://github.company.com/api/v3',
-        owner: 'christianblandford',
-        repo: 'my-electron-app',
-        accessToken: GITHUB_TOKEN
-    })
+```
+const updater = autoUpdater({
+    baseUrl: 'https://github.company.com/api/v3',
+    owner: 'github-owner',
+    repo: 'my-electron-app',
+    accessToken: GITHUB_TOKEN
+})
+```
 
 # Events
 
