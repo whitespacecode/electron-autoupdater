@@ -1,5 +1,5 @@
 {
-  "name": "electron-autoupdater",
+  "name": "@whitespacecode/electron-autoupdater",
   "version": "1.0.0",
   "description": "Use private or enterprise GitHub repositories to auto update Electron apps. A replacement for Electron's build-in autoUpdater.",
   "main": "dist/index.js",
