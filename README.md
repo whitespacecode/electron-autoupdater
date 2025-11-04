@@ -124,13 +124,24 @@ This event is emitted after a user calls `quitAndInstall()`.
 All methods are class methods so use them like this:
 ` const updater = autoUpdater({ ... }) updater.checkForUpdates()`
 
-## async checkForUpdates()
+## async checkForUpdates(releaseType?: 'production' | 'prerelease' | 'default')
 
 Checks Github for an update. If one is found, it will automatically be downloaded and installed. FeedUrl is set automatically by this package.
+
+### Parameters
+
+- `releaseType` *(optional)* – A string specifying which type of release to check:
+  - `'production'` – Only check for stable releases.
+  - `'prerelease'` – Only check for pre-releases.
+  - `'default'` – Uses the package’s default behavior if not specified.
 
 ## async getLatestRelease()
 
 Async function that returns the latest release from Github, regardless of if it is newer than the current app version or not. [More information here](https://docs.github.com/en/rest/reference/releases#list-releases).
+
+## async getLatestPreRelease()
+
+Async function that return the latest pre-release from Github
 
 ## async downloadUpdateFromRelease(release: GithubRelease)
 
@@ -189,3 +200,7 @@ Alias for `clearCache()`
 ### ipcRenderer.invoke('ElectronAutoUpdater', 'getLatestRelease')
 
 Returns the latest release found in github
+
+### ipcRenderer.invoke('ElectronAutoUpdater', 'getLatestPreRelease')
+
+Returns the latest pre-release found in github

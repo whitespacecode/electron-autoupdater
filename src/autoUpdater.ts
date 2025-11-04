@@ -1,21 +1,18 @@
-import axios, { AxiosError } from 'axios'
-import { pipeline } from 'stream'
+import axios from 'axios'
 import os from 'os'
 import {
   app,
   autoUpdater as electronAutoUpdater,
   BrowserWindow,
-  ipcMain,
-  IpcMainEvent,
-  IpcMainInvokeEvent,
+  ipcMain
 } from 'electron'
-import isDev from 'electron-is-dev'
 import fs from 'fs'
 import path from 'path'
 import EventEmitter from 'events'
 import { GithubRelease, GithubReleaseAsset } from './types'
-import { eq as semverEq, gt as semverGt, gte as semverGte, rcompare as semverCompare } from 'semver'
+import { gte as semverGte, rcompare as semverCompare } from 'semver'
 
+const isDev = (process.env.APP_DEBUG === 'true') || !app.isPackaged;
 // Platform validation
 const supportedPlatforms = ['darwin', 'win32'] as const
 type SupportedPlatformType = typeof supportedPlatforms[number]
@@ -158,6 +155,8 @@ class ElectronGithubAutoUpdater extends EventEmitter {
           return true
         case 'getLatestRelease':
           return await this.getLatestRelease()
+        case 'getLatestPreRelease':
+          return await this.getLatestPreRelease()
         default:
           throw new Error(`No listener for ${method}`)
       }
@@ -246,6 +245,27 @@ class ElectronGithubAutoUpdater extends EventEmitter {
 
       return matchedRelease
     }
+  }
+
+  getLatestPreRelease = async () => {
+    const response = await axios.get(
+      `${this.baseUrl}/repos/${this.owner}/${this.repo}/releases?per_page=100`,
+      {
+        headers: this._headers,
+      }
+    )
+    const releases: GithubRelease[] = response.data.filter(
+      (release: GithubRelease) => !release.draft && release.prerelease
+    )
+
+    if (releases.length === 0) {
+      throw new Error('No pre-release releases found')
+    }
+
+    releases.sort((a, b) => semverCompare(a.name, b.name))
+
+    this.latestRelease = releases[0]
+    return releases[0]
   }
 
   // Preps the default electron autoUpdater to install the update
@@ -388,7 +408,7 @@ class ElectronGithubAutoUpdater extends EventEmitter {
     }
   }
 
-  checkForUpdates = async () => {
+  checkForUpdates = async (releaseType: 'production' | 'prerelease' | 'default' = 'default') => {
     try {
       // If already checking, log an error
       if (this.lastEmit.type === 'checking-for-update') {
@@ -399,7 +419,23 @@ class ElectronGithubAutoUpdater extends EventEmitter {
       this.emit('checking-for-update')
 
       // Get the latest release and its version number
-      const latestRelease = await this.getLatestRelease()
+      // const latestRelease = await this.getLatestRelease()
+      let latestRelease: GithubRelease
+
+      switch (releaseType) {
+        case 'production':
+          this.allowPrerelease = false
+          latestRelease = await this.getLatestRelease()
+          break
+        case 'prerelease':
+          latestRelease = await this.getLatestPreRelease()
+          break
+        case 'default':
+        default:
+          latestRelease = await this.getLatestRelease()
+          break
+      }
+
       const latestVersion = latestRelease.tag_name
 
       if (semverGte(this.currentVersion, latestVersion)) {

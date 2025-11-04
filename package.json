@@ -1,5 +1,5 @@
 {
-  "name": "electron-github-autoupdater",
+  "name": "electron-autoupdater",
   "version": "2.0.0",
   "description": "Use private or enterprise GitHub repositories to auto update Electron apps. A replacement for Electron's build-in autoUpdater.",
   "main": "dist/index.js",
@@ -11,25 +11,24 @@
     "build": "tsc --build",
     "clean": "tsc --build --clean"
   },
-  "repository": "https://github.com/christianblandford/electron-github-autoupdater",
-  "author": "Christian Blandford",
+  "repository": "https://github.com/whitespacecode/electron-autoupdater",
+  "author": "Whitespacecode",
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "@types/semver": "^7.3.9",
-    "electron": "^16.0.4",
-    "electron-is-dev": "^2.0.0",
-    "eslint": "^7.6.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
-    "prettier": "^2.3.0",
-    "typescript": "^4.0.2"
+    "@types/semver": "^7.7.1",
+    "electron": "^39.0.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-unused-imports": "^4.3.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "axios": "^0.24.0",
-    "semver": "^7.3.5"
+    "axios": "^1.13.1",
+    "semver": "^7.7.3"
   }
 }

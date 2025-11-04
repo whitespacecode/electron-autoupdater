@@ -1,20 +1,19 @@
-/// <reference types="node" />
 import EventEmitter from 'events';
 import { GithubRelease } from './types';
 declare const supportedPlatforms: readonly ["darwin", "win32"];
 export declare const channelName = "ElectronAutoUpdater";
 declare const electronAutoUpdaterEventTypes: readonly ["error", "checking-for-update", "update-available", "update-not-available", "update-downloaded", "before-quit-for-update"];
-export declare type ElectronAutoUpdaterEventType = typeof electronAutoUpdaterEventTypes[number];
-export declare type AutoUpdaterEventType = ElectronAutoUpdaterEventType | 'update-downloading';
-declare type LastEmit = {
+export type ElectronAutoUpdaterEventType = typeof electronAutoUpdaterEventTypes[number];
+export type AutoUpdaterEventType = ElectronAutoUpdaterEventType | 'update-downloading';
+type LastEmit = {
     type: AutoUpdaterEventType;
     args: any[];
 };
-declare type PlatformConfig = {
+type PlatformConfig = {
     requiredFiles: RegExp[];
     feedUrl: string;
 };
-export declare type AutoUpdaterOptions = {
+export type AutoUpdaterOptions = {
     baseUrl?: string;
     owner: string;
     repo: string;
@@ -55,12 +54,13 @@ declare class ElectronGithubAutoUpdater extends EventEmitter {
     _getPlatformConfig: () => PlatformConfig;
     _getCachedReleaseId: () => number | null;
     getLatestRelease: () => Promise<GithubRelease>;
+    getLatestPreRelease: () => Promise<GithubRelease>;
     _loadElectronAutoUpdater: (release: GithubRelease) => void;
     _installDownloadedUpdate: () => void;
     emit: (e: AutoUpdaterEventType, args?: any) => boolean;
     downloadUpdateFromRelease: (release: GithubRelease) => Promise<void>;
     clearCache: () => void;
-    checkForUpdates: () => Promise<void>;
+    checkForUpdates: (releaseType?: "production" | "prerelease" | "default") => Promise<void>;
     quitAndInstall: () => void;
     destroy: () => void;
 }
