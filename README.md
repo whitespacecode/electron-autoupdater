@@ -30,7 +30,7 @@ That's pretty much it! It looks just like Electron's autoUpdater, but accepts a 
         repo: string,
         accessToken: string,
         allowPrerelease?: boolean, //optional, default: false
-        forwardEvents?: boolean, //optional, default: true
+        shouldForwardEvents?: boolean, //optional, default: true
     }
 
 - **baseUrl**: Optional, default: `'https://api.github.com'`. The base URL for your github enterprise environment. Example: `https://github.company.com/api/v3`
@@ -38,7 +38,7 @@ That's pretty much it! It looks just like Electron's autoUpdater, but accepts a 
 - **repo**: Required. Repo name
 - **accessToken** Required. Github personal access token with access to your repo
 - **allowPrerelease** Optional. Default false. Specify if you want to allow auto updating to releases tagged as prerelease
-- **forwardEvents** Optional. Default true. Specify if you want to automatically forward events to all renderer windows. Should only be disabled for performance reasons, or if manually handling events in the main process.
+- **shouldForwardEvents** Optional. Default true. Specify if you want to automatically forward events to all renderer windows. Should only be disabled for performance reasons, or if manually handling events in the main process.
 
 ### Config Example
 
@@ -86,9 +86,10 @@ Emitted when there is no available update.
 Returns:
 
 - `event` Event
-- `size` Number: Total size of all files that are being downloaded
-- `progress` Number: Total bytes downloaded
-- `percent` Number: Percent complete
+- `downloadStatus` *(Object)* — Contains information about the download progress:
+  - `size` *(Number)* — Total size of all files being downloaded.
+  - `progress` *(Number)* — Total bytes downloaded.
+  - `percent` *(Number)* — Download progress percentage.
 - `releaseNotes` String?: Returned if release description is provided in Github.
 - `releaseName` String
 - `releaseDate` Date
